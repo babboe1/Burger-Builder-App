@@ -3,6 +3,9 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Burger from '../../components/Burger/Burger';
 import AuthContext from '../../context/authContext';
 import Auxi from '../../hoc/Auxi/Auxi';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Backdrop from '../../components/UI/Backdrop/Backdrop';
 
 class BurgerBuilder extends Component {
 	state = {
@@ -19,12 +22,13 @@ class BurgerBuilder extends Component {
 			meat: 0,
 		},
 		fixedPrices: {
-			salad: 1,
-			bacon: 1,
-			cheese: 1,
-			meat: 2,
+			salad: 0.1,
+			bacon: 0.1,
+			cheese: 0.1,
+			meat: 0.2,
 		},
 		totalPrice: 4,
+		showModal: false,
 	};
 
 	ingredientHandler = (e, operator) => {
@@ -60,21 +64,32 @@ class BurgerBuilder extends Component {
 				newState[key] = element;
 			}
 		}
-		console.log(newPrices, totalPrice);
-
 		this.setState({
 			ingredients: newState,
 			initialPrice: newPrices,
-			totalPrice: totalPrice,
+			totalPrice: +totalPrice.toFixed(1),
 		});
 	};
-   render() {
-      const newObject = { ...this.state.ingredients }
-      for (const key in newObject) {
-         if (Object.hasOwnProperty.call(newObject, key)) {
-            newObject[key] = newObject[key] <= 0;
-         }
-      }
+
+	onOrderClick = () => {
+		if (!this.state.showModal) {
+			document.body.classList.add('StopScroll');
+		} else document.body.classList.remove('StopScroll');
+		this.setState({
+			showModal: !this.state.showModal,
+		});
+	};
+	render() {
+		const newObject = { ...this.state.ingredients };
+		for (const key in newObject) {
+			if (Object.hasOwnProperty.call(newObject, key)) {
+				newObject[key] = newObject[key] <= 0;
+			}
+		}
+
+		const showBackdrop = this.state.showModal ? (
+			<Backdrop click={this.onOrderClick} />
+		) : null;
 
 		return (
 			<AuthContext.Provider
@@ -84,11 +99,21 @@ class BurgerBuilder extends Component {
 				}}
 			>
 				<Auxi>
+					{showBackdrop}
+					<Modal show={this.state.showModal}>
+						<OrderSummary
+							data={{ ...this.state.ingredients }}
+							click={this.onOrderClick}
+							price={this.state.totalPrice}
+						/>
+					</Modal>
 					<Burger ingredients={this.state.ingredients} />
 					<BuildControls
 						object={this.state.ingredients}
-                  price={this.state.totalPrice}
-                  disabled={newObject}
+						price={this.state.totalPrice}
+						disabled={newObject}
+						orderDisabled={this.state.ingredients}
+						click={this.onOrderClick}
 					/>
 				</Auxi>
 			</AuthContext.Provider>
