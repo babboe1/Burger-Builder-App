@@ -4,7 +4,7 @@ import classes from './NavItems.css';
 
 const NavItems = (props) => {
 	const list = props.data.map((item, idx) => (
-		<NavItem link={props.links[idx]} active={(props.active)[idx]}>{item}</NavItem>
+		<NavItem link={props.links[idx]} key={idx} active={(props.active)[idx]}>{item}</NavItem>
 	));
 	return <ul className={classes.NavItems}>{list}</ul>;
 };
