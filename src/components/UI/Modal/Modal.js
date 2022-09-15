@@ -3,11 +3,16 @@ import classes from './Modal.css';
 
 class Modal extends React.Component {
    shouldComponentUpdate(nextProps, nextState) {
-      return nextProps.show !== this.props.show
-   }
-   componentDidUpdate() {
-      console.log('[Modal] component updated');
-   }
+      console.log('[modal]', nextProps.children, this.props.children, nextProps.children !== this.props.children);
+		return (
+			nextProps.show !== this.props.show ||
+			nextProps.children !== this.props.children
+		);
+	}
+
+	componentDidUpdate() {
+		console.log('[Modal] component updated');
+	}
 
 	render() {
 		return (
@@ -26,6 +31,6 @@ class Modal extends React.Component {
 			</div>
 		);
 	}
-};
+}
 
 export default Modal;
