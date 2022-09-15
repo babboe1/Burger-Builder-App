@@ -6,6 +6,8 @@ import Auxi from '../../hoc/Auxi/Auxi';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Backdrop from '../../components/UI/Backdrop/Backdrop';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import axios from '../../axios-orders';
 
 class BurgerBuilder extends Component {
 	state = {
@@ -29,6 +31,8 @@ class BurgerBuilder extends Component {
 		},
 		totalPrice: 4,
 		showModal: false,
+		loading: false,
+		error: false,
 	};
 
 	ingredientHandler = (e, operator) => {
@@ -71,6 +75,9 @@ class BurgerBuilder extends Component {
 		});
 	};
 
+	test = () => {
+		this.setState({ loading: true });
+	};
 	onOrderClick = () => {
 		if (!this.state.showModal) {
 			document.body.classList.add('StopScroll');
@@ -79,12 +86,65 @@ class BurgerBuilder extends Component {
 			showModal: !this.state.showModal,
 		});
 	};
+
+	onOrderPurchase = () => {
+		document.body.classList.add('StopScroll');
+		this.setState({
+			loading: true,
+		});
+		console.log(this.state.loading);
+		const order = {
+			ingredients: this.props.ingredients,
+			price: this.props.price,
+			customer: {
+				name: 'Max',
+				address: {
+					street: 'Teststreet 1',
+					zipCode: '41351',
+					country: 'Germany',
+				},
+				email: 'test@test.com',
+			},
+			deliveryMethod: 'fastest',
+		};
+		axios
+			.post(`/orders.json`, order)
+			.then((res) => {
+				console.log(res);
+				this.setState({
+					loading: false,
+					showModal: !this.state.showModal,
+				});
+				document.body.classList.remove('StopScroll');
+			})
+			.catch((err) =>
+				this.setState({
+					error: !this.state.error,
+					loading: false,
+				}),
+			);
+	};
 	render() {
 		const newObject = { ...this.state.ingredients };
 		for (const key in newObject) {
 			if (Object.hasOwnProperty.call(newObject, key)) {
 				newObject[key] = newObject[key] <= 0;
 			}
+		}
+
+		let orderSummary = (
+			<OrderSummary
+				ingredients={this.state.ingredients}
+				price={this.state.totalPrice}
+				purchase={this.onOrderPurchase}
+				click={this.onOrderClick}
+				data={{ ...this.state.ingredients }}
+			/>
+		);
+		if (this.state.loading) {
+			orderSummary = <Spinner />;
+		} else if (this.state.error) {
+			orderSummary = <p style={{textAlign: 'center'}}>Something went wrong</p>;
 		}
 
 		const showBackdrop = this.state.showModal ? (
@@ -100,12 +160,8 @@ class BurgerBuilder extends Component {
 			>
 				<Auxi>
 					{showBackdrop}
-					<Modal show={this.state.showModal}>
-						<OrderSummary
-							data={{ ...this.state.ingredients }}
-							click={this.onOrderClick}
-							price={this.state.totalPrice}
-						/>
+					<Modal show={this.state.showModal} load={this.state.loading}>
+						{orderSummary}
 					</Modal>
 					<Burger ingredients={this.state.ingredients} />
 					<BuildControls
