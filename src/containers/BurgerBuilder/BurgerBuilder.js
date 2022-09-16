@@ -8,6 +8,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Backdrop from '../../components/UI/Backdrop/Backdrop';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import axios from '../../axios-orders';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class BurgerBuilder extends Component {
 	state = {
@@ -92,7 +93,6 @@ class BurgerBuilder extends Component {
 		this.setState({
 			loading: true,
 		});
-		console.log(this.state.loading);
 		const order = {
 			ingredients: this.props.ingredients,
 			price: this.props.price,
@@ -143,9 +143,9 @@ class BurgerBuilder extends Component {
 		);
 		if (this.state.loading) {
 			orderSummary = <Spinner />;
-		} else if (this.state.error) {
-			orderSummary = <p style={{textAlign: 'center'}}>Something went wrong</p>;
-		}
+      } else if (this.state.error) {
+         orderSummary = <p>Something went wrong</p>;
+      }
 
 		const showBackdrop = this.state.showModal ? (
 			<Backdrop click={this.onOrderClick} />
@@ -177,4 +177,4 @@ class BurgerBuilder extends Component {
 	}
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axios);
