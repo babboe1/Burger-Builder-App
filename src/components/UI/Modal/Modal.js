@@ -3,10 +3,12 @@ import classes from './Modal.css';
 
 class Modal extends React.Component {
    shouldComponentUpdate(nextProps, nextState) {
-      console.log('[modal]', nextProps.children, this.props.children, nextProps.children !== this.props.children);
+      const nextChild = `${nextProps.children.type}`
+      const currentChild = `${this.props.children.type}`
+      
 		return (
-			nextProps.show !== this.props.show ||
-			nextProps.children !== this.props.children
+         nextProps.show !== this.props.show ||
+         nextChild !== currentChild
 		);
 	}
 
