@@ -4,9 +4,9 @@ import Auxi from '../../../hoc/Auxi/Auxi';
 import Button from '../../UI/Button/Button';
 
 class OrderSummary extends Component {
-	componentDidUpdate() {
-		console.log('[Order Summary] component updated');
-	}
+	// componentDidUpdate() {
+	// 	console.log('[Order Summary] component updated');
+	// }
 	render() {
 	
 		const ingredientSummary = Object.keys(this.props.data).map((key, idx) => {
