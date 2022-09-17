@@ -125,26 +125,34 @@ class BurgerBuilder extends Component {
 			);
 	};
 	render() {
-		const newObject = { ...this.state.ingredients };
-		for (const key in newObject) {
-			if (Object.hasOwnProperty.call(newObject, key)) {
-				newObject[key] = newObject[key] <= 0;
-			}
-		}
+      const newObject = { ...this.state.ingredients };
+      for (const key in newObject) {
+         if (Object.hasOwnProperty.call(newObject, key)) {
+            newObject[key] = newObject[key] <= 0;
+         }
+      }
 
-		let orderSummary = (
-			<OrderSummary
-				ingredients={this.state.ingredients}
-				price={this.state.totalPrice}
-				purchase={this.onOrderPurchase}
-				click={this.onOrderClick}
-				data={{ ...this.state.ingredients }}
-			/>
-		);
-		if (this.state.loading) {
-			orderSummary = <Spinner />;
-      } else if (this.state.error) {
-         orderSummary = <p>Something went wrong</p>;
+      let orderSummary = (
+         <OrderSummary
+            ingredients={this.state.ingredients}
+            price={this.state.totalPrice}
+            purchase={this.onOrderPurchase}
+            click={this.onOrderClick}
+            data={{ ...this.state.ingredients }}
+         />
+      );
+      if (this.state.loading) {
+         orderSummary = <Spinner />;
+      } else if (this.state.credits && this.state.error) {
+         console.log('there is error');
+         this.onOrderClick();
+      } else if (this.state.credits) {
+         // console.log('there is credits', this.state.error);
+         orderSummary = (
+            <p style={{ textAlign: 'center' }}>
+               <strong>Thank you for placing your order</strong>
+            </p>
+         );
       }
 
 		const showBackdrop = this.state.showModal ? (
