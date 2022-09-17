@@ -11,30 +11,30 @@ import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class BurgerBuilder extends Component {
-	state = {
-		ingredients: {
-			salad: 0,
-			bacon: 0,
-			cheese: 0,
-			meat: 0,
-		},
-		initialPrice: {
-			salad: 0,
-			bacon: 0,
-			cheese: 0,
-			meat: 0,
-		},
-		fixedPrices: {
-			salad: 0.1,
-			bacon: 0.1,
-			cheese: 0.1,
-			meat: 0.2,
-		},
-		totalPrice: 4,
-		showModal: false,
-		loading: false,
-		error: false,
-	};
+   state = {
+      ingredients: null,
+      initialPrice: null,
+      fixedPrices: null,
+      totalPrice: null,
+      showModal: false,
+      loading: false,
+      error: false,
+      credits: false,
+   };
+
+   componentDidMount() {
+      axios
+         .get('/.json')
+         .then((res) => {
+            this.setState({
+               ingredients: res.data.ingredients,
+               fixedPrices: res.data.fixedPrice,
+               initialPrice: res.data.initialPrice,
+               totalPrice: res.data.totalPrice,
+               // error: false,
+            });
+         })
+   }
 
 	ingredientHandler = (e, operator) => {
 		const newState = { ...this.state.ingredients };
