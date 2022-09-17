@@ -2,21 +2,21 @@ import React from 'react';
 import classes from './Modal.css';
 
 class Modal extends React.Component {
-   shouldComponentUpdate(nextProps, nextState) {
-      const nextChild = `${nextProps.children.type}`
-      const currentChild = `${this.props.children.type}`
+   // shouldComponentUpdate(nextProps, nextState) {
+   //    const nextChild = `${nextProps.children.type}`
+   //    const currentChild = `${this.props.children.type}`
       
-		return (
-         nextProps.show !== this.props.show ||
-         nextChild !== currentChild
-		);
-	}
+	// 	return (
+   //       nextProps.show !== this.props.show ||
+   //       nextChild !== currentChild
+	// 	);
+	// }
 
-	componentDidUpdate() {
-		console.log('[Modal] component updated');
-	}
+	// componentDidUpdate() {
+	// 	console.log('[Modal] component updated');
+	// }
 
-	render() {
+   render() {
 		return (
 			<div
 				className={classes.Modal}
