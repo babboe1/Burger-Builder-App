@@ -7,34 +7,60 @@ const withErrorHandler = (WrappedComponent, axios) => {
    return class extends Component {
       state = {
          error: null,
-         showModal: false
+         showModal: false,
       };
-      componentDidMount() {
-         axios.interceptors.request.use((req) => {
+
+      axiosFunction = (effect) => {
+         axios.interceptors.request[effect]((req) => {
             this.setState({ error: null });
             return req;
          });
-         axios.interceptors.response.use(null, (error) => {
+         axios.interceptors.response[effect](null, (error) => {
             this.setState({
                error: error,
-               showModal: true
+               showModal: true,
             });
+            return Promise.reject(error);
          });
+      };
+      componentDidMount() {
+         this.axiosFunction('use');
       }
+      componentWillUnmount() {
+         this.axiosFunction('eject');
+      }
+      // componentDidMount() {
+      //    axios.interceptors.request.use((req) => {
+      //       this.setState({ error: null });
+      //       return req;
+      //    });
+      //    axios.interceptors.response.use(null, (error) => {
+      //       this.setState({
+      //          error: error,
+      //          showModal: true,
+      //       });
+      //       return Promise.reject(error);
+      //    });
+      // }
       render() {
          return (
             <Auxi>
                {this.state.error ? (
-                  <Backdrop click={() => {
-                     this.setState({
-                        error: null,
-                        showModal: false
-                     })
-                  }} />
+                  <Backdrop
+                     click={() => {
+                        this.setState({
+                           error: null,
+                           showModal: false,
+                        });
+                     }}
+                  />
                ) : null}
                <Modal show={this.state.error}>
-                  {this.state.error ? this.state.error.message : null}
-                  {console.log(this.state.error)}
+                  {this.state.error ? (
+                     <p style={{ textAlign: 'center' }}>
+                        <strong>{this.state.error.message}</strong>
+                     </p>
+                  ) : null}
                </Modal>
                <WrappedComponent {...this.props} />
             </Auxi>
