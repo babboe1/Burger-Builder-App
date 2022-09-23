@@ -106,7 +106,7 @@ class BurgerBuilder extends Component {
          deliveryMethod: 'fastest',
       };
       axios
-         .post(`/orders`, order)
+         .post(`/orders.json`, order)
          .then((res) => {
             this.setState({
                // showModal: !this.state.showModal,
