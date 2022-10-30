@@ -1,3 +1,7 @@
+# Burger builder Web App
+This project is a practise project that is created with react class components and a Firebase backend server
+Practised using LifeCycle Hooks, Apis, Axios, styled components, css modules, Error Handling 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
